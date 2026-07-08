@@ -1,3 +1,8 @@
+## 1.2.0
+
+### New Features
+- Added Swift Package Manager support for iOS (CocoaPods still supported)
+
 ## 1.1.0
 
 ### New Features

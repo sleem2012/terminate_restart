@@ -4,7 +4,7 @@
 #
 Pod::Spec.new do |s|
   s.name             = 'terminate_restart'
-  s.version          = '1.1.0'
+  s.version          = '1.2.0'
   s.summary          = 'A Flutter plugin to terminate and restart the app'
   s.description      = <<-DESC
 A Flutter plugin that helps you to terminate and restart your app on both iOS and Android platforms.
@@ -13,7 +13,7 @@ A Flutter plugin that helps you to terminate and restart your app on both iOS an
   s.license          = { :file => '../LICENSE' }
   s.author           = { 'Your Company' => 'email@example.com' }
   s.source           = { :path => '.' }
-  s.source_files = 'Classes/**/*'
+  s.source_files = 'terminate_restart/Sources/terminate_restart/**/*.swift'
   s.dependency 'Flutter'
   s.platform = :ios, '12.0'
 
