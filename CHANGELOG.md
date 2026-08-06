@@ -1,3 +1,11 @@
+## Unreleased
+
+### Improvements
+* **Swift Package Manager support for iOS**: the plugin now ships a `Package.swift`, so it resolves natively under SwiftPM — the default integration for Flutter plugins as of Flutter 3.44
+  * iOS sources moved from `ios/Classes/` to `ios/terminate_restart/Sources/terminate_restart/`
+  * `ios/terminate_restart.podspec` now points at the new source path, so **CocoaPods keeps working unchanged** — no action is required from existing users on either integration
+  * Example app's Xcode project migrated to the Swift Package Manager integration
+
 ## 1.1.0
 
 ### New Features
