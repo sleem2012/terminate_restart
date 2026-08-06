@@ -287,6 +287,10 @@ The iOS implementation provides:
 - Keychain data handling
 - User defaults management
 
+**Dependency management:** the iOS plugin supports both **Swift Package Manager** (the default for
+Flutter plugins as of Flutter 3.44) and **CocoaPods**. Flutter picks the right one automatically — no
+extra setup is needed either way.
+
 ## Author
 
 Created by Ahmed Sleem

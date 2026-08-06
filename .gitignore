@@ -73,6 +73,11 @@ pubspec.lock
 **/ios/ServiceDefinitions.json
 **/ios/Runner/GeneratedPluginRegistrant.*
 
+# Swift Package Manager
+.build/
+.swiftpm/
+Package.resolved
+
 # macOS
 **/macos/Flutter/GeneratedPluginRegistrant.*
 **/macos/Flutter/ephemeral
