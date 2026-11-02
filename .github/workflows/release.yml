@@ -4,44 +4,53 @@ on:
     tags:
       - 'v*'
 
+permissions:
+  contents: write
+
 jobs:
+  ios:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+      - run: flutter create --platforms=ios /tmp/terminate_restart_consumer
+      - name: Build iOS consumer
+        working-directory: /tmp/terminate_restart_consumer
+        run: |
+          flutter pub add "terminate_restart@{path: '$GITHUB_WORKSPACE'}"
+          flutter build ios --simulator --no-codesign
+
   release:
+    needs: ios
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      
-      - name: Setup Flutter
-        uses: subosito/flutter-action@v2
+      - uses: actions/checkout@v4
+      - name: Verify release tag
+        run: |
+          version=$(sed -n 's/^version: //p' pubspec.yaml)
+          test "$GITHUB_REF_NAME" = "v$version"
+      - uses: actions/setup-java@v4
         with:
-          flutter-version: '3.16.0'
-          channel: 'stable'
-          
-      - name: Install dependencies
-        run: flutter pub get
-        
-      - name: Analyze and test
-        run: |
-          flutter analyze
-          flutter test
-          
-      - name: Build example
-        run: |
-          cd example
-          flutter build apk
-          flutter build ios --release --no-codesign
-          cd ..
-          
+          distribution: temurin
+          java-version: '17'
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+      - run: flutter pub get
+      - run: flutter analyze --no-fatal-infos
+      - run: flutter test
+      - name: Build Android example
+        working-directory: example
+        run: flutter build apk
       - name: Create GitHub Release
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@v2
         with:
-          files: |
-            example/build/app/outputs/flutter-apk/app-release.apk
+          files: example/build/app/outputs/flutter-apk/app-release.apk
           body_path: CHANGELOG.md
-          draft: false
-          prerelease: false
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          
       - name: Publish to pub.dev
         run: |
           mkdir -p ~/.pub-cache

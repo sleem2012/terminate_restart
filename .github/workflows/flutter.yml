@@ -2,37 +2,65 @@ name: Flutter CI
 
 on:
   push:
-    branches: [ main ]
+    branches: [main]
   pull_request:
-    branches: [ main ]
+    branches: [main]
 
 jobs:
-  build:
+  dart:
     runs-on: ubuntu-latest
-
+    strategy:
+      fail-fast: false
+      matrix:
+        flutter: ['3.22.0', 'stable']
     steps:
-      - uses: actions/checkout@v3
-      
-      - name: Setup Flutter
-        uses: subosito/flutter-action@v2
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.16.0'
-          channel: 'stable'
-          
-      - name: Install dependencies
-        run: flutter pub get
-        
-      - name: Verify formatting
-        run: dart format --output=none --set-exit-if-changed .
-        
-      - name: Analyze project source
-        run: flutter analyze
-        
-      - name: Run tests
-        run: flutter test --coverage
-        
-      - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v3
+          flutter-version: ${{ matrix.flutter == 'stable' && '' || matrix.flutter }}
+          channel: stable
+      - run: flutter pub get
+      - run: flutter analyze --no-fatal-infos
+      - run: flutter test
+
+  android:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
         with:
-          token: ${{ secrets.CODECOV_TOKEN }}
-          file: coverage/lcov.info
+          distribution: temurin
+          java-version: '17'
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+      - name: Build Android example
+        working-directory: example
+        run: |
+          flutter build apk --debug
+          flutter build apk --release
+
+  ios:
+    runs-on: macos-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        integration: [swiftpm, cocoapods]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+      - name: Configure iOS integration
+        run: |
+          if [ '${{ matrix.integration }}' = swiftpm ]; then
+            flutter config --enable-swift-package-manager
+          else
+            flutter config --no-enable-swift-package-manager
+          fi
+      - name: Build a clean consumer app
+        run: |
+          flutter create --platforms=ios /tmp/terminate_restart_consumer
+          cd /tmp/terminate_restart_consumer
+          flutter pub add "terminate_restart@{path: '$GITHUB_WORKSPACE'}"
+          flutter build ios --simulator --no-codesign

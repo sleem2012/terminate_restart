@@ -1,6 +1,12 @@
 plugins {
     id 'com.android.library'
-    id 'kotlin-android'
+}
+
+// AGP 9 provides Kotlin unless the consuming build explicitly disables it.
+def agpMajor = com.android.Version.ANDROID_GRADLE_PLUGIN_VERSION.tokenize('.')[0].toInteger()
+def builtInKotlin = providers.gradleProperty('android.builtInKotlin').orNull != 'false'
+if (agpMajor < 9 || !builtInKotlin) {
+    apply plugin: 'kotlin-android'
 }
 
 group 'com.ahmedsleem.terminate_restart'
@@ -22,10 +28,6 @@ android {
         targetCompatibility JavaVersion.VERSION_17
     }
 
-    kotlinOptions {
-        jvmTarget = '17'
-    }
-
     sourceSets {
         main.java.srcDirs += 'src/main/kotlin'
     }
@@ -38,6 +40,12 @@ android {
     lintOptions {
         disable 'InvalidPackage'
     }
+}
+
+// Configure the task directly: the Android kotlinOptions extension is absent
+// when AGP supplies Kotlin. This also works with older Kotlin Gradle plugins.
+tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).configureEach {
+    kotlinOptions.jvmTarget = '17'
 }
 
 dependencies {

@@ -34,3 +34,7 @@ example/android/app/.cxx/**/*.json
 
 # We want to include the example pubspec.lock
 !example/pubspec.lock
+# Swift Package Manager
+.build/
+.swiftpm/
+Package.resolved

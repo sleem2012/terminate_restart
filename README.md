@@ -287,6 +287,8 @@ The iOS implementation provides:
 - Keychain data handling
 - User defaults management
 
+The iOS plugin supports both Swift Package Manager and CocoaPods.
+
 ## Author
 
 Created by Ahmed Sleem

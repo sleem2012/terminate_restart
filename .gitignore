@@ -117,3 +117,8 @@ doc/api/
 *.g.dart
 *.freezed.dart
 *.mocks.dart
+# Swift Package Manager
+.build/
+.swiftpm/
+Package.resolved
+!example/pubspec.lock

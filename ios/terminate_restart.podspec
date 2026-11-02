@@ -13,7 +13,7 @@ A Flutter plugin that helps you to terminate and restart your app on both iOS an
   s.license          = { :file => '../LICENSE' }
   s.author           = { 'Your Company' => 'email@example.com' }
   s.source           = { :path => '.' }
-  s.source_files = 'Classes/**/*'
+  s.source_files = 'terminate_restart/Sources/terminate_restart/**/*.swift'
   s.dependency 'Flutter'
   s.platform = :ios, '12.0'
 

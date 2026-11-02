@@ -1,3 +1,10 @@
+## Unreleased
+
+* Added Swift Package Manager support for iOS while retaining CocoaPods support.
+* Support Android Gradle Plugin 9 built-in Kotlin and older Android builds.
+* Run iOS release validation on macOS and update CI coverage.
+* Correct the minimum SDK constraints to Dart 3.4 and Flutter 3.22, as required by the web dependency.
+
 ## 1.1.0
 
 ### New Features
